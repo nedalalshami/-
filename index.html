@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> موقعك بدقة  </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  </head>
+<body >
+
+  <div style="max-width: 1100px; margin: auto;">
+
+
+<header>
+
+  <nav class="navbar navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="https://www.youtube.com/channel/UCW6Rj61vG2N8MYULoKF5t1g" target="_blank">
+        <img src="logo.png" alt="" width="70" style="border-radius: 50%;">
+      </a>
+
+      <button id="getLocation" class="btn " style="background:rgb(108, 239, 108); border: 0px;font-weight: bold;color: black;">تحديد موقعي المباشر  </button>
+      <button class="btn " style="  border: 2px solid #13f60b; background: white;">NEDAL.SH</button>
+
+    </div>
+  </nav>
+
+
+
+</header>
+
+<main id="content">
+
+  <section id="alert" style="text-align: center; font-weight: bold;"> </section>
+  <section id="map"> 
+    <iframe height="500" width="100%" src="https://www.openstreetmap.org/export/embed.html?bbox=0,0&;layer=mapnik"> </iframe>
+
+  </section>
+
+</main>
+
+<footer style="text-align: center;">
+  
+  <div class="card mb-3" >
+    <div class="row g-0">
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">Doğrudan coğrafi konumunuz</h5>
+          <p class="card-text">اعرض موقعك المباشر بأمان</p>
+          <p class="card-text"><small class="text-muted"><a href="https://nedalalshami.github.io/learnwithe-omar/idex2.html" target="_blank">nedal alshami</a></small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+</div>
+<script>
+
+
+var isLive = false; 
+var shareLocation;
+var accessLocation;
+document.getElementById("getLocation").onclick = ()=>{
+    if(isLive === false ){
+
+        shareLocation = navigator.geolocation.watchPosition(
+            function(position){
+                accessLocation = true
+                
+               document.getElementById("alert").innerHTML = `
+               <div class="alert alert-success" 
+                role="alert"> يتم عرض موقعك الآن في الخريطة بشكلٍ مباشر </div> `
+                document.getElementById("getLocation").innerHTML = "إيقاف المشاركة"
+                isLive = true 
+                
+                document.getElementById("map").innerHTML = 
+                `<iframe height="400" width="100%" src="https://www.openstreetmap.org/export/embed.html?bbox=${position.coords.longitude},${position.coords.latitude}&;layer=mapnik"> </iframe> `
+            },
+            function(error){
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:  
+                    document.getElementById("alert").innerHTML = ` <div class="alert alert-danger mt-3 mb-3"  role="alert">
+        لقد قمت برفض الوصول إلى موقعك , يرجى المحاولة لاحقاً
+                  </div> `
+                    break;
+    
+                    case error.UNKNOWN_ERROR:
+                        document.getElementById("alert").innerHTML = `<div class="alert alert-danger mt-3 mb-3" role="alert"> حدث خطا غير معروف  </div> `
+    
+                    break;
+    
+                }
+            }
+        )
+    
+    }else if(isLive === true && accessLocation === true){
+        console.log("removed" + navigator.geolocation.clearWatch(shareLocation))
+
+        document.getElementById("alert").innerHTML = `
+        <div class="alert alert-success" 
+         role="alert"> تم إيقاف مشاركة موقعك بنجاح
+         </div> `
+        console.log(shareLocation)
+        navigator.geolocation.clearWatch(shareLocation);
+        document.getElementById("getLocation").innerHTML = "عرض موقعي المباشر"
+        isLive = false 
+    }   
+}
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
